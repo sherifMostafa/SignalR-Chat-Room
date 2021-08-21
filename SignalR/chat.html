@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>chat</title>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.4.2.js"></script>
+    <script>
+        $(function () {
+
+            name = prompt("Enter Your Name : ");
+            // let connection = $.hubConnection('url'); // if the hub in different project
+
+            //define connection 
+            let connection = $.hubConnection();
+          
+            //create Proxy 
+             chatProxy = connection.createHubProxy("chat");
+
+            //start connection
+            connection.start();
+
+
+            // define callback function (new Message)
+            chatProxy.on("newMessage", function (n , m) {
+
+                $("#sss").append("<li>" + n + " : " + m + "</li>");
+
+            });
+
+
+        })
+
+        function send() {
+            // call server method (sendMessage)
+            chatProxy.invoke("sendMessage", name, $("#txt").val());
+
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="txt"/>
+    <input type="button" id="send" value="Send"/>
+
+    <ul id="sss">
+
+    </ul>
+    
+</body>
+</html>
